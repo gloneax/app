@@ -1,0 +1,19 @@
+---
+/********************************************************************* 
+Author: Sukanta Manna  
+Purpose: avalanches.astro.
+**********************************************************************/
+import AvalancheMap from "../../components/AvalancheMap"
+import Layout from "../../layouts/main.astro"
+
+export function getStaticPaths() {
+  return [
+    { params: { lang: undefined } }, // /avalanches
+    { params: { lang: 'es' } },      // /es/avalanches
+  ];
+}
+---
+
+<Layout>
+  <AvalancheMap client:only />
+</Layout>

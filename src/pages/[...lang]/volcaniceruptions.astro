@@ -1,0 +1,21 @@
+---
+/********************************************************************* 
+Author: Sukanta Manna  
+Purpose: volcaniceruptions.astro.
+**********************************************************************/
+import VolcanoMap from "../../components/VolcanoMap"
+import Layout from "../../layouts/main.astro"
+
+export function getStaticPaths() {
+  return [
+    { params: { lang: undefined } }, 
+    { params: { lang: 'es' } },      
+  ];
+}
+---
+
+<Layout>
+  
+    <VolcanoMap client:only />
+  
+</Layout>

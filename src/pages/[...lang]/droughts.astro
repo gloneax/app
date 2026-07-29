@@ -1,0 +1,19 @@
+---
+import DroughtMap from "../../components/DroughtMap"
+import Layout from "../../layouts/main.astro"
+
+export function getStaticPaths() {
+  return [
+    { params: { lang: undefined } },
+    { params: { lang: 'es' } },    
+  ];
+}
+
+const { lang } = Astro.params;
+---
+
+<Layout>
+  <div class="h-full w-full flex">
+    <DroughtMap client:only/>
+  </div>
+</Layout>

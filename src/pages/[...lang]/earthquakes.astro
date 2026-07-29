@@ -1,0 +1,23 @@
+---
+/********************************************************************* 
+Author: Sukanta Manna  
+Purpose: earthquakes.astro.
+**********************************************************************/
+import EarthquakeMap from "../../components/EarthquakeMap"
+import Layout from "../../layouts/main.astro"
+
+export function getStaticPaths() {
+  return [
+    { params: { lang: undefined } }, 
+    { params: { lang: 'es' } },      
+  ];
+}
+
+const { lang } = Astro.params;
+---
+
+<Layout>  
+  <div class="h-full w-full flex">
+    <EarthquakeMap client:only/>
+  </div>
+</Layout>

@@ -1,0 +1,56 @@
+// src/i18n/ui.ts
+export const languages = {
+  en: 'English (EN)',
+  es: 'Español (ES)',
+};
+
+export const ui = {
+  en: {
+    'sidebar.home': 'Home',
+    'sidebar.naturalDisasters': 'Natural Disasters',
+    'sidebar.healthMetrics': 'Health Metrics',
+    'sidebar.categories.earthquakes': 'Earthquakes',
+    'sidebar.categories.volcaniceruptions':'Volcanic Eruptions',
+    'sidebar.categories.storms': 'Storms',
+    'sidebar.categories.tsunamis':'Tsunamis',
+    'sidebar.categories.floods': 'Floods',
+    'sidebar.categories.droughts': 'Droughts',
+    'sidebar.categories.wildfires': 'Wildfires',
+    'sidebar.categories.avalanches': 'Avalanches',
+    'sidebar.categories.childmortality':'Child mortality',
+    'sidebar.categories.covid':'COVID',
+    'sidebar.categories.dementia':'Dementia',
+    'sidebar.categories.ebola':'Ebola',
+    'sidebar.categories.hepatitis':'Hepatitis',
+    'sidebar.categories.hiv':'HIV',
+    'sidebar.categories.lifeExpectancy': 'Life expectancy',
+    'sidebar.categories.malaria':'Malaria',
+    'sidebar.categories.mumps':'Mumps',
+    'sidebar.categories.nutrition':'Nutrition',
+    'sidebar.categories.tuberculosis':'Tuberculosis'    
+  },
+  es: {
+    'sidebar.home': 'Inicio',
+    'sidebar.naturalDisasters': 'Desastres Naturales',
+    'sidebar.healthMetrics': 'Métricas de Salud',
+    'sidebar.categories.earthquakes': 'Terremotos',
+    'sidebar.categories.volcaniceruptions':'Erupciones volcánicas',
+    'sidebar.categories.storms': 'Tormentas',
+    'sidebar.categories.tsunamis':'Tsunamis',
+    'sidebar.categories.floods': 'Inundaciones',
+    'sidebar.categories.droughts': 'Drafts',
+    'sidebar.categories.wildfires': 'Incendios forestales',
+    'sidebar.categories.avalanches': 'Avalanchas',
+    'sidebar.categories.childmortality':'Mortalidad infantil',
+    'sidebar.categories.covid':'COVID',
+    'sidebar.categories.dementia':'Demencia',
+    'sidebar.categories.ebola':'Ebola',
+    'sidebar.categories.hepatitis':'Hepatitis',
+    'sidebar.categories.hiv':'HIV',
+    'sidebar.categories.lifeExpectancy': 'Esperanza de Vida',
+    'sidebar.categories.malaria':'Malaria',
+    'sidebar.categories.mumps':'Paperas',
+    'sidebar.categories.nutrition':'Nutrición',
+    'sidebar.categories.tuberculosis':'Tuberculosis'    
+  },
+} as const;

@@ -1,0 +1,23 @@
+---
+/********************************************************************* 
+Author: Sukanta Manna  
+Purpose: lifeexpectancy.astro.
+**********************************************************************/
+import LifeExpectancyMap from "../../components/health/LifeExpectancyMap"
+import Layout from "../../layouts/main.astro"
+
+export function getStaticPaths() {
+  return [
+    { params: { lang: undefined } },
+    { params: { lang: 'es' } },    
+  ];
+}
+
+const { lang } = Astro.params;
+---
+
+<Layout>
+  <div class="h-full w-full flex">
+    <LifeExpectancyMap client:only />
+  </div>
+</Layout>
