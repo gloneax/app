@@ -5,28 +5,73 @@ Purpose: Main layout of the application.
 **********************************************************************/
 import "@/styles/global.css"
 import DashboardLayout from "@/components/DashboardLayout"
-import { getLangFromUrl } from '../i18n/utils';
+import { getLangFromUrl } from "../i18n/utils"
 
-const lang = getLangFromUrl(Astro.url);
+const lang = getLangFromUrl(Astro.url)
 ---
-
 
 <html lang={lang}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width" />
-    <meta name="description" content="gloneax keeps close eye on the Negative Axis of the Earth.">
-    <meta name="keywords" content="natural disaster, earthquake, volcanic eruption, storm, tsunami, flood, drought, wildfire, avalanche, child mortality, hepatitis, HIV, life expectancy, mumps, tuberculosis">
-    <meta name="author" content="Sukanta Manna">
+    <meta
+      name="description"
+      content="gloneax keeps close eye on the Negative Axis of the Earth."
+    />
+    <meta
+      name="keywords"
+      content="natural disaster, earthquake, volcanic eruption, storm, tsunami, flood, drought, wildfire, avalanche, child mortality, hepatitis, HIV, life expectancy, mumps, tuberculosis"
+    />
+    <meta name="author" content="Sukanta Manna" />
     <link rel="icon" type="image/x-icon" href="/favicon.ico" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/site.webmanifest" />
     <meta name="theme-color" content="#020617" />
     <title>gloneax</title>
+
+    <!-- inside layouts/main.astro head -->
+    <script is:inline>
+      function applyTheme() {
+        const theme = localStorage.getItem("theme")
+        const systemDark = window.matchMedia(
+          "(prefers-color-scheme: dark)"
+        ).matches
+        const isDark = theme === "dark" || (!theme && systemDark)
+
+        document.documentElement.classList.toggle("dark", isDark)
+      }
+
+      // Global helper to set theme from React/JS components
+      window.setTheme = (theme) => {
+        localStorage.setItem("theme", theme)
+        applyTheme()
+      }
+
+      // 1. Initial execution before paint
+      applyTheme()
+
+      // 2. Keep theme consistent during Astro View Transitions (if used)
+      document.addEventListener("astro:after-swap", applyTheme)
+
+      // 3. Sync with system OS changes if no manual preference is saved
+      window
+        .matchMedia("(prefers-color-scheme: dark)")
+        .addEventListener("change", (e) => {
+          if (!localStorage.getItem("theme")) {
+            document.documentElement.classList.toggle("dark", e.matches)
+          }
+        })
+    </script>
   </head>
-  <body class="flex h-full w-full overflow-hidden bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-slate-100 antialiased">
-    <DashboardLayout client:load currentLang={lang} currentPath={Astro.url.pathname}>
+  <body
+    class="flex h-full w-full overflow-hidden bg-slate-50 text-slate-900 antialiased dark:bg-slate-900 dark:text-slate-100"
+  >
+    <DashboardLayout
+      client:load
+      currentLang={lang}
+      currentPath={Astro.url.pathname}
+    >
       <slot />
     </DashboardLayout>
   </body>

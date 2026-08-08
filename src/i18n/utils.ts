@@ -16,7 +16,8 @@ export function getLangFromUrl(url: URL) {
 
 export function useTranslations(lang: keyof typeof ui) {
   return function t(key: keyof typeof ui[typeof defaultLang]) {
-    return ui[lang][key] || ui[defaultLang][key];
+    const langDict = ui[lang] as Record<keyof typeof ui[typeof defaultLang], string>;
+    return langDict[key] || ui[defaultLang][key];
   };
 }
 

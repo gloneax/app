@@ -19,7 +19,7 @@ export const GET: APIRoute = async () => {
     }
 
     const whoData = await whoResponse.json();
-    console.log(whoData)
+   
     const geoData = await geoResponse.json();
 
     // 1. Build a lookup registry that catches BOTH coordinates and English names from GeoJSON
@@ -100,7 +100,7 @@ export const GET: APIRoute = async () => {
       status: 200,
       headers: {
         'Content-Type': 'application/json',
-        'Cache-Control': 'public, max-age=60' 
+        'Cache-Control': 'public, max-age=86400' 
       }
     });
 

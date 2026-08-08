@@ -2,21 +2,27 @@
 /********************************************************************* 
 Author: Sukanta Manna  
 Purpose: This is home page to the App. Here, we display statistics of 
-         last few years.
+         last few years across supported languages.
 **********************************************************************/
-import Layout from "@/layouts/main.astro"
-import EarthquakeStatsChart from "../components/EarthquakeStatsChart"
+import Layout from "@/layouts/main.astro";
+import EarthquakeStatsChart from "../components/EarthquakeStatsChart";
 import VolcanoStatsSummary from '../components/VolcanoStatsSummary';
-import StormInsightsCard from '../components/StormInsightsCard'
+import StormInsightsCard from '../components/StormInsightsCard';
 
 export function getStaticPaths() {
   return [
-    { params: { lang: undefined } }, 
-    { params: { lang: 'es' } },      
+    { params: { lang: undefined } }, // Matches "/"
+    { params: { lang: 'bn' } },      // Matches "/bn"
+    { params: { lang: 'es' } },      // Matches "/es"
+    { params: { lang: 'fr' } },      // Matches "/fr"
+    { params: { lang: 'hi' } },      // Matches "/hi"
+    { params: { lang: 'ja' } },      // Matches "/ja"
+    { params: { lang: 'ru' } },      // Matches "/ru"
+    { params: { lang: 'zh' } },      // Matches "/zh"
   ];
 }
 
-const { lang } = Astro.params;
+const { lang = 'en' } = Astro.params;
 ---
 
 <Layout>

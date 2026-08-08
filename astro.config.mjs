@@ -1,20 +1,15 @@
-// @ts-check
+import { defineConfig } from 'astro/config';
+import react from '@astrojs/react';
+import tailwindcss from '@tailwindcss/vite'; // Import from Vite plugin
 
-import tailwindcss from "@tailwindcss/vite"
-import { defineConfig } from "astro/config"
-import react from "@astrojs/react"
-
-// https://astro.build/config
 export default defineConfig({
+  integrations: [
+    react(),
+    // REMOVE tailwind() from integrations!
+  ],
   vite: {
-    plugins: [tailwindcss()],
+    plugins: [
+      tailwindcss(), // Add tailwindcss here
+    ],
   },
-  integrations: [react()],
-  i18n: {
-    defaultLocale: 'en',
-    locales: ['en', 'es'],
-    routing: {
-      prefixDefaultLocale: false // Keeps your default URLs clean (e.g., /storms vs /es/storms)
-    }
-  }
-})
+});

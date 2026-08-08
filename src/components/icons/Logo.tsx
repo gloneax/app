@@ -1,12 +1,16 @@
-// src/components/Logo.tsx
+/********************************************************************* 
+Author: Sukanta Manna  
+Purpose: Render high-contrast vector logo with optional title/subtitle.
+**********************************************************************/
 import React from 'react';
 
 interface LogoProps {
   className?: string;
   showText?: boolean;
+  subtitle?: string;
 }
 
-export default function Logo({ className = "", showText = true }: LogoProps) {
+export default function Logo({ className = "", showText = true, subtitle = "Hazard Intelligence" }: LogoProps) {
   return (
     <div className={`flex items-center gap-2.5 select-none ${className}`}>
       {/* High-Contrast Favicon-Optimized Vector Icon */}
@@ -18,13 +22,12 @@ export default function Logo({ className = "", showText = true }: LogoProps) {
           className="w-full h-full p-1"
         >
           <defs>
-            {/* Clip path matching the exact outer boundary of the white circle (r = 40) */}
             <clipPath id="outerCircleClip">
               <circle cx="50" cy="50" r="40" />
             </clipPath>
           </defs>
 
-          {/* Outer Globe Ring (Inner Radius: 32, Outer Radius: 40) */}
+          {/* Outer Globe Ring */}
           <circle
             cx="50"
             cy="50"
@@ -33,7 +36,7 @@ export default function Logo({ className = "", showText = true }: LogoProps) {
             strokeWidth="8"
           />
 
-          {/* Left Half Horizontal Axis (White, Thickness = 8px) */}
+          {/* Left Half Horizontal Axis */}
           <line
             x1="14"
             y1="50"
@@ -44,8 +47,7 @@ export default function Logo({ className = "", showText = true }: LogoProps) {
             strokeLinecap="butt"
           />
 
-          {/* Right Half Horizontal Axis (Red, Thickness = 12px = 1.5x White) */}
-          {/* Clipped to the outer circle to guarantee a perfect curved finish on the right */}
+          {/* Right Half Horizontal Axis */}
           <g clipPath="url(#outerCircleClip)">
             <line
               x1="50"
@@ -64,14 +66,15 @@ export default function Logo({ className = "", showText = true }: LogoProps) {
         </svg>
       </div>
 
-      {/* Typography Brand Name: gloneax */}
+      {/* Typography Brand Name: gloneax & Dynamic Subtitle */}
       {showText && (
         <div className="flex flex-col leading-none group-data-[state=collapsed]:hidden overflow-hidden">
           <span className="font-extrabold text-base tracking-tight text-slate-900 dark:text-slate-100 font-sans whitespace-nowrap">
             gloneax
           </span>
-          <span className="text-[9px] font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-widest mt-1 whitespace-nowrap">
-            Hazard Intelligence
+          {/* Updated text contrast for dark mode */}
+          <span className="text-[9px] font-semibold text-slate-500 dark:text-slate-300 uppercase tracking-widest mt-1 whitespace-nowrap">
+            {subtitle}
           </span>
         </div>
       )}

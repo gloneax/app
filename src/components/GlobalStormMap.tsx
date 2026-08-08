@@ -1,60 +1,80 @@
 /********************************************************************* 
 Author: Sukanta Manna  
-Purpose: Show storms on the global map.
+Purpose: Show real storm & weather telemetry using OpenWeatherMap.
 **********************************************************************/
 import RealTimeHazardMap from './RealTimeHazardMap';
 
 export default function GlobalStormMap() {
-    return (
-        <RealTimeHazardMap
-            // Open-access, CORS-enabled global significant storm & weather feed
-            apiUrl="https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/2.5_week.geojson"
-            getMarkerOptions={(feature) => {
-                const mag = feature.properties?.mag || 0;
-                
-                // Color code storm warning metrics
-                let color = "#3498db"; 
-                let radius = 6;
+  return (
+    <RealTimeHazardMap
+      // Point to your local API proxy endpoint that formats OpenWeatherMap data
+      apiUrl="/api/storms"
+      getMarkerOptions={(feature) => {
+        const windSpeed = feature.properties?.windSpeedKmh || 0;
 
-                if (mag >= 5.0) {
-                    color = "#e74c3c"; // Crimson warning
-                    radius = 11;
-                } else if (mag >= 4.0) {
-                    color = "#e67e22"; // Elevated
-                    radius = 8;
-                }
+        // Color code based on wind speed thresholds (Tropical Disturbance -> Storm -> Severe Storm)
+        let color = "#3498db"; // Normal / Moderate (< 30 km/h)
+        let radius = 6;
 
-                return {
-                    radius: radius,
-                    fillColor: color,
-                    color: "#ffffff",
-                    weight: 1.5,
-                    opacity: 1,
-                    fillOpacity: 0.75
-                };
-            }}
+        if (windSpeed >= 60) {
+          color = "#e74c3c"; // Severe Storm (> 60 km/h)
+          radius = 12;
+        } else if (windSpeed >= 35) {
+          color = "#e67e22"; // Moderate Wind / Squall (35-60 km/h)
+          radius = 9;
+        }
 
-            renderPopupContent={(feature) => {
-                const props = feature.properties || {};
-                return (
-                    <>
-                        <h4 className="m-0 font-bold text-base text-slate-900 border-b border-slate-100 pb-1 mb-1.5 flex items-center gap-1.5">
-                            🌀 Severe Event Vector
-                        </h4>
-                        <p className="m-0 text-sm font-bold text-indigo-600 leading-tight mb-1">
-                            {props.title || "Atmospheric Disturbance Event"}
-                        </p>
-                        <p className="m-0 text-xs text-slate-600 font-medium leading-normal mb-2">
-                            Location Parameter: <span className="font-semibold text-slate-800">{props.place || 'Global Coordinate Grid'}</span>
-                        </p>
+        return {
+          radius: radius,
+          fillColor: color,
+          color: "#ffffff",
+          weight: 1.5,
+          opacity: 1,
+          fillOpacity: 0.8,
+        };
+      }}
+      renderPopupContent={(feature) => {
+        const props = feature.properties || {};
 
-                        <div className="text-[10px] bg-slate-50 border border-slate-100 rounded p-1.5 text-slate-500 font-mono space-y-0.5">
-                            <span className="block">Alert Significance Index: <b className="text-slate-700">{props.sig || 'N/A'}</b></span>
-                            <span className="block">Log Time: {props.time ? new Date(props.time).toLocaleTimeString() : 'Recent'}</span>
-                        </div>
-                    </>
-                );
-            }}
-        />
-    );
+        const formattedDate = props.time
+          ? new Date(props.time).toLocaleString(undefined, {
+              dateStyle: 'medium',
+              timeStyle: 'short',
+            })
+          : 'Recent';
+
+        return (
+          <>
+            <h4 className="m-0 font-bold text-base text-slate-900 border-b border-slate-100 pb-1 mb-1.5 flex items-center gap-1.5">
+              🌀 Atmospheric Vector
+            </h4>
+            <p className="m-0 text-sm font-bold text-indigo-600 capitalize leading-tight mb-1">
+              {props.condition || "Weather Disturbance"}
+            </p>
+            <p className="m-0 text-xs text-slate-600 font-medium leading-normal mb-2">
+              Station Location: <span className="font-semibold text-slate-800">{props.place}</span>
+            </p>
+
+            <div className="text-[10px] bg-slate-50 border border-slate-100 rounded p-1.5 text-slate-600 font-mono space-y-1">
+              <div className="flex justify-between">
+                <span>Wind Speed:</span>
+                <b className="text-slate-800">{props.windSpeedKmh} km/h</b>
+              </div>
+              <div className="flex justify-between">
+                <span>Temperature:</span>
+                <b className="text-slate-800">{props.temp}°C</b>
+              </div>
+              <div className="flex justify-between">
+                <span>Pressure / Humidity:</span>
+                <b className="text-slate-800">{props.pressure} hPa | {props.humidity}%</b>
+              </div>
+              <div className="border-t border-slate-200 pt-1 text-[9px] text-slate-400">
+                Log Time: {formattedDate}
+              </div>
+            </div>
+          </>
+        );
+      }}
+    />
+  );
 }

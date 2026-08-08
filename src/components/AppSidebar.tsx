@@ -5,10 +5,8 @@ Purpose: Create Sidebar of the application.
 import {
     Activity,
     Flame,
-    WavesHorizontal,
     Tornado,
     ThermometerSun,
-    WavesArrowUp,
     MountainSnow,
     ChevronDown,
     Baby,
@@ -16,12 +14,22 @@ import {
     HeartPulse,
     ShieldAlert,
     Ribbon,
-    Stethoscope
+    Stethoscope,
+    HeartHandshake,
+    MessageCircle,
+    Scale,
+    Copyright
 } from "lucide-react";
+
+import Logo from '../components/icons/Logo';
+import Volcano from "../components/icons/Volcano";
+import Tsunami from "../components/icons/Tsunami";
+import Flood from "../components/icons/Flood";
 
 import {
     Sidebar,
     SidebarContent,
+    SidebarFooter,
     SidebarGroup,
     SidebarGroupContent,
     SidebarGroupLabel,
@@ -39,23 +47,32 @@ import {
 } from "./ui/collapsible";
 import { ui } from "../i18n/ui";
 
-import Logo from './Logo';
-
 interface AppSidebarProps {
     currentLang: keyof typeof ui;
     currentPath: string;
 }
 
 function AppSidebar({ currentLang, currentPath }: AppSidebarProps) {
-    const t = (key: keyof typeof ui['en']) => ui[currentLang][key] || ui['en'][key];
+    const t = (key: keyof typeof ui['en']) => {
+        const langObj = ui[currentLang] as Record<keyof typeof ui['en'], string>;
+        return langObj[key] || ui['en'][key];
+    };
+    
     const localizeUrl = (url: string) => currentLang === 'en' ? url : `/${currentLang}${url}`;
+
+    // Helper function to check if the path matches the current URL
+    const isPathActive = (targetUrl: string) => {
+        const cleanCurrent = currentPath.replace(/\/$/, "") || "/";
+        const cleanTarget = targetUrl.replace(/\/$/, "") || "/";
+        return cleanCurrent === cleanTarget;
+    };
 
     const naturalDisasters = [
         { title: t("sidebar.categories.earthquakes"), url: localizeUrl("/earthquakes"), icon: Activity },
-        { title: t("sidebar.categories.volcaniceruptions"), url: localizeUrl("/volcaniceruptions"), icon: Flame },
+        { title: t("sidebar.categories.volcaniceruptions"), url: localizeUrl("/volcaniceruptions"), icon: Volcano },
         { title: t("sidebar.categories.storms"), url: localizeUrl("/storms"), icon: Tornado },
-        { title: t("sidebar.categories.tsunamis"), url: localizeUrl("/tsunamis"), icon: WavesArrowUp },
-        { title: t("sidebar.categories.floods"), url: localizeUrl("/floods"), icon: WavesHorizontal },
+        { title: t("sidebar.categories.tsunamis"), url: localizeUrl("/tsunamis"), icon: Tsunami },
+        { title: t("sidebar.categories.floods"), url: localizeUrl("/floods"), icon: Flood },
         { title: t("sidebar.categories.droughts"), url: localizeUrl("/droughts"), icon: ThermometerSun },
         { title: t("sidebar.categories.wildfires"), url: localizeUrl("/wildfires"), icon: Flame },
         { title: t("sidebar.categories.avalanches"), url: localizeUrl("/avalanches"), icon: MountainSnow },
@@ -65,31 +82,31 @@ function AppSidebar({ currentLang, currentPath }: AppSidebarProps) {
         { title: t("sidebar.categories.childmortality"), url: localizeUrl("/childmortality"), icon: Baby },
         { title: t("sidebar.categories.hepatitis"), url: localizeUrl("/hepatitis"), icon: ShieldAlert },
         { title: t("sidebar.categories.hiv"), url: localizeUrl("/hiv"), icon: Ribbon },
-        { title: t("sidebar.categories.lifeExpectancy"), url: localizeUrl("/lifeexpectancy"), icon: HeartPulse },
+        { title: t("sidebar.categories.lifeexpectancy"), url: localizeUrl("/lifeexpectancy"), icon: HeartPulse },
         { title: t("sidebar.categories.mumps"), url: localizeUrl("/mumps"), icon: Biohazard },
         { title: t("sidebar.categories.tuberculosis"), url: localizeUrl("/tuberculosis"), icon: Stethoscope },
     ];
 
     return (
         <Sidebar collapsible="icon" className="relative z-99999 border-r border-slate-200 dark:border-slate-800">
-            <SidebarHeader className="h-14 px-0.5 flex items-center shrink-0 justify-start">
-                <SidebarMenu>
+            <SidebarHeader className="h-14 px-0.5 flex items-center shrink-0 justify-start overflow-hidden">
+                <SidebarMenu className="w-full">
                     <SidebarMenuItem>
-                        <a href={localizeUrl("/")} className="flex items-center gap-2 w-full px-2.5 py-2 rounded-md hover:bg-slate-100 dark:hover:bg-slate-800 text-sm font-medium text-slate-900 dark:text-slate-100">
-                            <Logo showText={true} />
+                        <a href={localizeUrl("/")} className="flex items-center gap-2 w-full px-2.5 py-2 rounded-md hover:bg-slate-100 dark:hover:bg-slate-800 text-sm font-medium text-slate-900 dark:text-slate-100 overflow-hidden">
+                            <Logo showText={true} subtitle={t("subtitle")} />
                         </a>
                     </SidebarMenuItem>
                 </SidebarMenu>
             </SidebarHeader>
             <SidebarSeparator />
 
-            {/* CONTENT - Added overflow-visible when collapsed */}
-            <SidebarContent className="group-data-[state=collapsed]:overflow-visible">
-                <div className="flex-1 overflow-y-auto group-data-[state=collapsed]:overflow-visible h-full pr-1 group-data-[state=collapsed]:pr-0 scrollbar-thin">
+            {/* CONTENT */}
+            <SidebarContent className="overflow-x-hidden group-data-[state=collapsed]:overflow-visible">
+                <div className="flex-1 overflow-y-auto overflow-x-hidden group-data-[state=collapsed]:overflow-visible h-full pr-1 group-data-[state=collapsed]:pr-0 scrollbar-thin">
 
                     {/* 1. NATURAL DISASTERS */}
                     <SidebarGroup className="group-data-[state=collapsed]:overflow-visible">
-                        <SidebarGroupLabel className="group-data-[state=collapsed]:hidden">
+                        <SidebarGroupLabel className="group-data-[state=collapsed]:hidden truncate">
                             {t("sidebar.naturalDisasters")}
                         </SidebarGroupLabel>
                         <SidebarGroupContent className="group-data-[state=collapsed]:overflow-visible">
@@ -107,12 +124,23 @@ function AppSidebar({ currentLang, currentPath }: AppSidebarProps) {
                                                 {t("sidebar.naturalDisasters")}
                                             </div>
                                             <div className="max-h-80 overflow-y-auto space-y-0.5">
-                                                {naturalDisasters.map((item) => (
-                                                    <a key={item.title} href={item.url} className="flex items-center gap-2.5 px-3 py-2 text-sm rounded-md hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200">
-                                                        <item.icon className="h-4 w-4 shrink-0 text-slate-400" />
-                                                        <span className="inline-block">{item.title}</span>
-                                                    </a>
-                                                ))}
+                                                {naturalDisasters.map((item) => {
+                                                    const active = isPathActive(item.url);
+                                                    return (
+                                                        <a 
+                                                            key={item.title} 
+                                                            href={item.url} 
+                                                            className={`flex items-center gap-2.5 px-3 py-2 text-sm rounded-md transition-colors ${
+                                                                active 
+                                                                    ? "bg-slate-100 dark:bg-slate-800 font-semibold text-blue-600 dark:text-blue-400" 
+                                                                    : "text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800"
+                                                            }`}
+                                                        >
+                                                            <item.icon className={`h-4 w-4 shrink-0 ${active ? "text-blue-600 dark:text-blue-400" : "text-slate-400"}`} />
+                                                            <span className="inline-block truncate">{item.title}</span>
+                                                        </a>
+                                                    );
+                                                })}
                                             </div>
                                         </div>
                                     </div>
@@ -120,16 +148,23 @@ function AppSidebar({ currentLang, currentPath }: AppSidebarProps) {
 
                                 {/* EXPANDED LIST */}
                                 <div className="group-data-[state=collapsed]:hidden space-y-1">
-                                    {naturalDisasters.map((item) => (
-                                        <SidebarMenuItem key={item.title}>
-                                            <SidebarMenuButton asChild>
-                                                <a href={item.url}>
-                                                    <item.icon className="h-4 w-4" />
-                                                    <span>{item.title}</span>
-                                                </a>
-                                            </SidebarMenuButton>
-                                        </SidebarMenuItem>
-                                    ))}
+                                    {naturalDisasters.map((item) => {
+                                        const active = isPathActive(item.url);
+                                        return (
+                                            <SidebarMenuItem key={item.title}>
+                                                <SidebarMenuButton 
+                                                    asChild 
+                                                    isActive={active}
+                                                    className={active ? "bg-slate-100 dark:bg-slate-800 text-blue-600 dark:text-blue-400 font-semibold" : ""}
+                                                >
+                                                    <a href={item.url} className="flex items-center gap-2 overflow-hidden">
+                                                        <item.icon className="h-4 w-4 shrink-0" />
+                                                        <span className="truncate">{item.title}</span>
+                                                    </a>
+                                                </SidebarMenuButton>
+                                            </SidebarMenuItem>
+                                        );
+                                    })}
                                 </div>
                             </SidebarMenu>
                         </SidebarGroupContent>
@@ -152,12 +187,23 @@ function AppSidebar({ currentLang, currentPath }: AppSidebarProps) {
                                                 {t("sidebar.healthMetrics")}
                                             </div>
                                             <div className="max-h-80 overflow-y-auto space-y-0.5">
-                                                {healthItems.map((item) => (
-                                                    <a key={item.title} href={item.url} className="flex items-center gap-2.5 px-3 py-2 text-sm rounded-md hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200">
-                                                        <item.icon className="h-4 w-4 shrink-0 text-slate-400" />
-                                                        <span className="inline-block">{item.title}</span>
-                                                    </a>
-                                                ))}
+                                                {healthItems.map((item) => {
+                                                    const active = isPathActive(item.url);
+                                                    return (
+                                                        <a 
+                                                            key={item.title} 
+                                                            href={item.url} 
+                                                            className={`flex items-center gap-2.5 px-3 py-2 text-sm rounded-md transition-colors ${
+                                                                active 
+                                                                    ? "bg-slate-100 dark:bg-slate-800 font-semibold text-blue-600 dark:text-blue-400" 
+                                                                    : "text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800"
+                                                            }`}
+                                                        >
+                                                            <item.icon className={`h-4 w-4 shrink-0 ${active ? "text-blue-600 dark:text-blue-400" : "text-slate-400"}`} />
+                                                            <span className="inline-block truncate">{item.title}</span>
+                                                        </a>
+                                                    );
+                                                })}
                                             </div>
                                         </div>
                                     </div>
@@ -168,22 +214,29 @@ function AppSidebar({ currentLang, currentPath }: AppSidebarProps) {
                                     <Collapsible defaultOpen className="group/collapsible w-full">
                                         <SidebarGroupLabel asChild className="p-0 hover:bg-transparent h-auto">
                                             <CollapsibleTrigger className="w-full flex items-center justify-between text-xs font-medium text-slate-500 py-1.5 px-2">
-                                                <span>{t("sidebar.healthMetrics")}</span>
-                                                <ChevronDown className="ml-auto h-4 w-4 transition-transform group-data-[state=open]/collapsible:rotate-180" />
+                                                <span className="truncate">{t("sidebar.healthMetrics")}</span>
+                                                <ChevronDown className="ml-auto h-4 w-4 shrink-0 transition-transform group-data-[state=open]/collapsible:rotate-180" />
                                             </CollapsibleTrigger>
                                         </SidebarGroupLabel>
                                         <CollapsibleContent className="mt-1 space-y-1">
                                             <SidebarMenu>
-                                                {healthItems.map((item) => (
-                                                    <SidebarMenuItem key={item.title}>
-                                                        <SidebarMenuButton asChild>
-                                                            <a href={item.url}>
-                                                                <item.icon className="h-4 w-4" />
-                                                                <span>{item.title}</span>
-                                                            </a>
-                                                        </SidebarMenuButton>
-                                                    </SidebarMenuItem>
-                                                ))}
+                                                {healthItems.map((item) => {
+                                                    const active = isPathActive(item.url);
+                                                    return (
+                                                        <SidebarMenuItem key={item.title}>
+                                                            <SidebarMenuButton 
+                                                                asChild 
+                                                                isActive={active}
+                                                                className={active ? "bg-slate-100 dark:bg-slate-800 text-blue-600 dark:text-blue-400 font-semibold" : ""}
+                                                            >
+                                                                <a href={item.url} className="flex items-center gap-2 overflow-hidden">
+                                                                    <item.icon className="h-4 w-4 shrink-0" />
+                                                                    <span className="truncate">{item.title}</span>
+                                                                </a>
+                                                            </SidebarMenuButton>
+                                                        </SidebarMenuItem>
+                                                    );
+                                                })}
                                             </SidebarMenu>
                                         </CollapsibleContent>
                                     </Collapsible>
@@ -192,8 +245,58 @@ function AppSidebar({ currentLang, currentPath }: AppSidebarProps) {
                         </SidebarGroupContent>
                     </SidebarGroup>
 
+                    {/* 3. COMMUNITY & SUPPORT */}
+                    <SidebarSeparator className="my-2" />
+                    <SidebarGroup>
+                        <SidebarGroupContent>
+                            <SidebarMenu>
+                                {/* Donate Button */}
+                                <SidebarMenuItem>
+                                    <SidebarMenuButton asChild className="bg-rose-500/10 hover:bg-rose-500/20 text-rose-600 dark:text-rose-400 font-medium">
+                                        <a href="https://github.com/sponsors" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 overflow-hidden">
+                                            <HeartHandshake className="h-4 w-4 shrink-0 text-rose-500" />
+                                            <span className="truncate">{t("donate")}</span>
+                                        </a>
+                                    </SidebarMenuButton>
+                                </SidebarMenuItem>
+
+                                {/* WhatsApp Group Link */}
+                                <SidebarMenuItem>
+                                    <SidebarMenuButton asChild>
+                                        <a href="https://chat.whatsapp.com/" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 overflow-hidden">
+                                            <MessageCircle className="h-4 w-4 shrink-0 text-emerald-500" />
+                                            <span className="truncate">{t("community")}</span>
+                                        </a>
+                                    </SidebarMenuButton>
+                                </SidebarMenuItem>
+
+                                {/* License Link */}
+                                <SidebarMenuItem>
+                                    <SidebarMenuButton 
+                                        asChild 
+                                        isActive={isPathActive(localizeUrl("/license"))}
+                                        className={isPathActive(localizeUrl("/license")) ? "bg-slate-100 dark:bg-slate-800 font-semibold text-blue-600 dark:text-blue-400" : ""}
+                                    >
+                                        <a href={localizeUrl("/license")} className="flex items-center gap-2 overflow-hidden">
+                                            <Scale className="h-4 w-4 shrink-0 text-slate-400" />
+                                            <span className="truncate">{t("license")}</span>
+                                        </a>
+                                    </SidebarMenuButton>
+                                </SidebarMenuItem>
+                            </SidebarMenu>
+                        </SidebarGroupContent>
+                    </SidebarGroup>
+
                 </div>
             </SidebarContent>
+
+            {/* FOOTER - Copyright Info */}
+            <SidebarFooter className="border-t border-slate-200 dark:border-slate-800 p-3 group-data-[state=collapsed]:hidden overflow-hidden">
+                <div className="flex items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400 overflow-hidden">
+                    <Copyright className="h-3.5 w-3.5 shrink-0" />
+                    <span className="truncate">{new Date().getFullYear()} Gloneax Org. All rights reserved.</span>
+                </div>
+            </SidebarFooter>
         </Sidebar>
     );
 }

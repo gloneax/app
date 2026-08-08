@@ -1,102 +1,73 @@
 /********************************************************************* 
 Author: Sukanta Manna  
-Purpose: Show statistics on storm.
+Purpose: Show statistics on storms using OpenWeatherMap live telemetry.
 **********************************************************************/
 import React, { useEffect, useState } from 'react';
 
 interface LiveStormCounts {
-  tornadoes: number;
-  severeThunderstorms: number;
-  cyclonesAndHurricanes: number;
-  galesAndHighWinds: number;
-  totalActiveAlerts: number;
+  thunderstorms: number;
+  highWinds: number;
+  tropicalCyclones: number;
+  extremePrecipitation: number;
+  totalTrackedPoints: number;
 }
 
 export default function StormInsightsCard() {
   const [counts, setCounts] = useState<LiveStormCounts>({
-    tornadoes: 0,
-    severeThunderstorms: 0,
-    cyclonesAndHurricanes: 0,
-    galesAndHighWinds: 0,
-    totalActiveAlerts: 0,
+    thunderstorms: 0,
+    highWinds: 0,
+    tropicalCyclones: 0,
+    extremePrecipitation: 0,
+    totalTrackedPoints: 0,
   });
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<boolean>(false);
 
   useEffect(() => {
-    async function fetchLiveNOAAAlerts() {
+    async function fetchServerTelemetry() {
       try {
-        // Fetch active live alert count summary directly from NOAA NWS API
-        const response = await fetch('https://api.weather.gov/alerts/active/count', {
-          headers: { 'User-Agent': 'GloneaxHazardApp/1.0' },
+        const res = await fetch('/api/storm-insights');
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+        const data = await res.json();
+
+        setCounts({
+          thunderstorms: Number(data.thunderstorms) || 0,
+          highWinds: Number(data.highWinds) || 0,
+          tropicalCyclones: Number(data.tropicalCyclones) || 0,
+          extremePrecipitation: Number(data.extremePrecipitation) || 0,
+          totalTrackedPoints: Number(data.totalTrackedPoints) || 0,
         });
 
-        if (!response.ok) throw new Error(`HTTP status: ${response.status}`);
-
-        const data = await response.json();
-
-        if (data && data.zones) {
-          const zones = data.zones;
-
-          // Dynamically aggregate categories from NOAA zone object
-          const tornadoCount =
-            (zones['Tornado Warning'] || 0) +
-            (zones['Tornado Watch'] || 0) +
-            (zones['Tornado'] || 0);
-
-          const tstormCount =
-            (zones['Severe Thunderstorm Warning'] || 0) +
-            (zones['Severe Thunderstorm Watch'] || 0) +
-            (zones['Severe Thunderstorm'] || 0);
-
-          const cycloneCount =
-            (zones['Hurricane Warning'] || 0) +
-            (zones['Hurricane Watch'] || 0) +
-            (zones['Tropical Storm Warning'] || 0) +
-            (zones['Tropical Storm Watch'] || 0) +
-            (zones['Hurricane Statement'] || 0);
-
-          const windCount =
-            (zones['High Wind Warning'] || 0) +
-            (zones['High Wind Watch'] || 0) +
-            (zones['Gale Warning'] || 0) +
-            (zones['Wind Advisory'] || 0);
-
-          const total = data.total || Object.values(zones as Record<string, number>).reduce((a, b) => a + b, 0);
-
-          setCounts({
-            tornadoes: tornadoCount,
-            severeThunderstorms: tstormCount,
-            cyclonesAndHurricanes: cycloneCount,
-            galesAndHighWinds: windCount,
-            totalActiveAlerts: total,
-          });
-          setError(false);
-        }
+        setError(false);
       } catch (err) {
-        console.error('Failed to stream live NOAA storm telemetry:', err);
+        console.error('Failed to fetch telemetry from server endpoint:', err);
         setError(true);
       } finally {
         setLoading(false);
       }
     }
 
-    fetchLiveNOAAAlerts();
-    const interval = setInterval(fetchLiveNOAAAlerts, 120000); // Poll every 2 mins
+    fetchServerTelemetry();
+    const interval = setInterval(fetchServerTelemetry, 300000); // 5 mins
     return () => clearInterval(interval);
   }, []);
 
-  const totalTrackedCategory =
-    counts.tornadoes +
-    counts.severeThunderstorms +
-    counts.cyclonesAndHurricanes +
-    counts.galesAndHighWinds || 1;
+  // Compute total active weather events detected across watchpoints
+  const totalEvents =
+    counts.thunderstorms +
+    counts.highWinds +
+    counts.tropicalCyclones +
+    counts.extremePrecipitation;
 
-  // Calculate dynamic percentages for the infographic gauge bars
-  const tstormPct = Math.round((counts.severeThunderstorms / totalTrackedCategory) * 100);
-  const windPct = Math.round((counts.galesAndHighWinds / totalTrackedCategory) * 100);
-  const cyclonePct = Math.round((counts.cyclonesAndHurricanes / totalTrackedCategory) * 100);
-  const tornadoPct = Math.min(100, Math.max(5, Math.round((counts.tornadoes / totalTrackedCategory) * 100)));
+  // Safe percentage calculation to prevent division by zero (NaN)
+  const calcPct = (val: number) =>
+    totalEvents > 0 ? Math.round((val / totalEvents) * 100) : 0;
+
+  const tstormPct = calcPct(counts.thunderstorms);
+  const windPct = calcPct(counts.highWinds);
+  const cyclonePct = calcPct(counts.tropicalCyclones);
+  const precipPct = calcPct(counts.extremePrecipitation);
 
   return (
     <div className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm font-sans">
@@ -104,10 +75,10 @@ export default function StormInsightsCard() {
       <div className="flex items-center justify-between mb-6 pb-4 border-b border-slate-100 dark:border-slate-800">
         <div>
           <h3 className="text-lg font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
-            <span>🌪️</span> Live Storm & Atmospheric Telemetry
+            <span>🌀</span> Live Storm & Atmospheric Telemetry
           </h3>
           <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-            Real-time active weather warnings streamed directly from NOAA NWS
+            Real-time active weather patterns streamed via OpenWeatherMap
           </p>
         </div>
 
@@ -127,23 +98,23 @@ export default function StormInsightsCard() {
 
       {error ? (
         <div className="p-4 bg-rose-50 dark:bg-rose-950/30 border border-rose-100 dark:border-rose-900/40 text-rose-600 dark:text-rose-400 text-xs font-semibold rounded-xl">
-          ⚠️ Unable to fetch live NOAA storm alert counts. Retrying automatically...
+          ⚠️ Unable to fetch live OpenWeatherMap telemetry. Retrying automatically...
         </div>
       ) : (
         <>
-          {/* Main Infographic KPI Grid */}
+          {/* Main KPI Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mb-6">
             
-            {/* KPI 1: Severe Thunderstorms */}
+            {/* KPI 1: Thunderstorms */}
             <div className="bg-slate-50 dark:bg-slate-800/40 border border-slate-100 dark:border-slate-800/80 rounded-xl p-4 flex flex-col justify-between">
               <span className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
-                Severe Thunderstorms
+                Thunderstorms
               </span>
               <div className="my-2 flex items-baseline gap-2">
                 <span className="text-3xl font-black text-amber-500">
-                  {counts.severeThunderstorms}
+                  {counts.thunderstorms}
                 </span>
-                <span className="text-xs text-slate-400 font-medium">active alerts</span>
+                <span className="text-xs text-slate-400 font-medium">active zones</span>
               </div>
               <div className="w-full h-1.5 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
                 <div
@@ -153,16 +124,16 @@ export default function StormInsightsCard() {
               </div>
             </div>
 
-            {/* KPI 2: Gales & High Winds */}
+            {/* KPI 2: High Winds */}
             <div className="bg-slate-50 dark:bg-slate-800/40 border border-slate-100 dark:border-slate-800/80 rounded-xl p-4 flex flex-col justify-between">
               <span className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
-                High Winds & Gales
+                High Winds (&gt;30 km/h)
               </span>
               <div className="my-2 flex items-baseline gap-2">
                 <span className="text-3xl font-black text-sky-500">
-                  {counts.galesAndHighWinds}
+                  {counts.highWinds}
                 </span>
-                <span className="text-xs text-slate-400 font-medium">active alerts</span>
+                <span className="text-xs text-slate-400 font-medium">active zones</span>
               </div>
               <div className="w-full h-1.5 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
                 <div
@@ -172,33 +143,33 @@ export default function StormInsightsCard() {
               </div>
             </div>
 
-            {/* KPI 3: Tornadoes */}
+            {/* KPI 3: Extreme Rain & Squalls */}
             <div className="bg-slate-50 dark:bg-slate-800/40 border border-slate-100 dark:border-slate-800/80 rounded-xl p-4 flex flex-col justify-between">
               <span className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
-                Active Tornadoes
+                Heavy Rain / Squalls
               </span>
               <div className="my-2 flex items-baseline gap-2">
                 <span className="text-3xl font-black text-rose-600 dark:text-rose-500">
-                  {counts.tornadoes}
+                  {counts.extremePrecipitation}
                 </span>
-                <span className="text-xs text-slate-400 font-medium">watches / warnings</span>
+                <span className="text-xs text-slate-400 font-medium">active zones</span>
               </div>
               <div className="w-full h-1.5 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
                 <div
                   className="h-full bg-rose-500 transition-all duration-500"
-                  style={{ width: `${tornadoPct}%` }}
+                  style={{ width: `${precipPct}%` }}
                 />
               </div>
             </div>
 
-            {/* KPI 4: Tropical Cyclones */}
+            {/* KPI 4: Cyclones & Severe Gales */}
             <div className="bg-slate-50 dark:bg-slate-800/40 border border-slate-100 dark:border-slate-800/80 rounded-xl p-4 flex flex-col justify-between">
               <span className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
-                Tropical Cyclones
+                Severe Cyclonic Gales
               </span>
               <div className="my-2 flex items-baseline gap-2">
                 <span className="text-3xl font-black text-purple-600 dark:text-purple-400">
-                  {counts.cyclonesAndHurricanes}
+                  {counts.tropicalCyclones}
                 </span>
                 <span className="text-xs text-slate-400 font-medium">tracked systems</span>
               </div>
@@ -216,14 +187,14 @@ export default function StormInsightsCard() {
           <div className="bg-slate-50 dark:bg-slate-800/40 border border-slate-100 dark:border-slate-800/80 rounded-xl p-5">
             <div className="flex justify-between items-center mb-2">
               <span className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
-                Live Alert Volume Breakdown
+                Live Condition Breakdown
               </span>
               <span className="text-xs font-extrabold text-slate-900 dark:text-slate-100">
-                {counts.totalActiveAlerts.toLocaleString()} Total Alerts Tracked
+                {counts.totalTrackedPoints} Global Watchpoints Active
               </span>
             </div>
 
-            {/* Multi-segment Segmented Bar Chart */}
+            {/* Segmented Progress Bar */}
             <div className="w-full h-3 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden flex gap-0.5">
               <div
                 title="Thunderstorms"
@@ -236,12 +207,12 @@ export default function StormInsightsCard() {
                 style={{ width: `${windPct}%` }}
               />
               <div
-                title="Tornadoes"
+                title="Heavy Rain"
                 className="h-full bg-rose-500 transition-all duration-500"
-                style={{ width: `${tornadoPct}%` }}
+                style={{ width: `${precipPct}%` }}
               />
               <div
-                title="Cyclones"
+                title="Severe Gales"
                 className="h-full bg-purple-500 transition-all duration-500"
                 style={{ width: `${cyclonePct}%` }}
               />
@@ -259,11 +230,11 @@ export default function StormInsightsCard() {
               </div>
               <div className="flex items-center gap-1.5">
                 <span className="w-2.5 h-2.5 rounded-full bg-rose-500" />
-                <span>Tornadoes ({tornadoPct}%)</span>
+                <span>Heavy Rain ({precipPct}%)</span>
               </div>
               <div className="flex items-center gap-1.5">
                 <span className="w-2.5 h-2.5 rounded-full bg-purple-500" />
-                <span>Cyclones ({cyclonePct}%)</span>
+                <span>Severe Gales ({cyclonePct}%)</span>
               </div>
             </div>
           </div>

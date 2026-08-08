@@ -2,44 +2,47 @@
 Author: Sukanta Manna  
 Purpose: Mode toggle.
 **********************************************************************/
-import * as React from "react"
-import { Moon, Sun } from "lucide-react"
-import { Button } from "@/components/ui/button"
+import { useEffect, useState } from "react";
+import { Sun, Moon } from "lucide-react";
+
+// Add this type declaration at the top of your file
+declare global {
+  interface Window {
+    setTheme?: (theme: "light" | "dark") => void;
+  }
+}
 
 export function ModeToggle() {
-  const [theme, setThemeState] = React.useState<"light" | "dark">("light")
+  const [theme, setThemeState] = useState<"light" | "dark">("light");
 
-  // Sync state with the actual HTML element class on initial load
-  React.useEffect(() => {
-    const isDarkMode = document.documentElement.classList.contains("dark")
-    setThemeState(isDarkMode ? "dark" : "light")
-  }, [])
+  useEffect(() => {
+    const isDark = document.documentElement.classList.contains("dark");
+    setThemeState(isDark ? "dark" : "light");
+  }, []);
 
-  // Apply theme class whenever state changes
-  React.useEffect(() => {
-    const isDark = theme === "dark"
-    document.documentElement.classList[isDark ? "add" : "remove"]("dark")
-  }, [theme])
-
-  // Simple toggle switcher handler
   const toggleTheme = () => {
-    setThemeState((prev) => (prev === "light" ? "dark" : "light"))
-  }
+    const nextTheme = theme === "dark" ? "light" : "dark";
+    setThemeState(nextTheme);
+
+    if (typeof window.setTheme === "function") {
+      window.setTheme(nextTheme);
+    } else {
+      localStorage.setItem("theme", nextTheme);
+      document.documentElement.classList.toggle("dark", nextTheme === "dark");
+    }
+  };
 
   return (
-    <Button
-      variant="outline"
-      size="icon"
+    <button
       onClick={toggleTheme}
-      title={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
+      className="p-2 rounded-md hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors"
+      aria-label="Toggle theme"
     >
-      {/* Sun Icon: Visible in light mode, shrinks and spins away in dark mode */}
-      <Sun className="h-[1.2rem] w-[1.2rem] scale-100 rotate-0 transition-all dark:scale-0 dark:-rotate-90" />
-
-      {/* Moon Icon: Hidden in light mode, spins and scales up in dark mode */}
-      <Moon className="absolute h-[1.2rem] w-[1.2rem] scale-0 rotate-90 transition-all dark:scale-100 dark:rotate-0" />
-
-      <span className="sr-only">Toggle theme</span>
-    </Button>
-  )
+      {theme === "dark" ? (
+        <Sun className="h-5 w-5 text-amber-400" />
+      ) : (
+        <Moon className="h-5 w-5 text-slate-700" />
+      )}
+    </button>
+  );
 }

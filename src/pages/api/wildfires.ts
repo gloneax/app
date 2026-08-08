@@ -6,10 +6,9 @@ import type { APIRoute } from 'astro';
 
 export const GET: APIRoute = async () => {
   try {
-    console.log("called")    
     // 🌟 Using NASA's EONET Open Web API for Active Wildfire coordinates
     const response = await fetch("https://eonet.gsfc.nasa.gov/api/v3/events?category=wildfires&status=open");
-    console.log(response)
+    
     if (!response.ok) {
       return new Response(
         JSON.stringify({ error: `NASA EONET responded with status: ${response.status}` }), 
