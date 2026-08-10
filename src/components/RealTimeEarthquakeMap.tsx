@@ -1,6 +1,6 @@
 /********************************************************************* 
 Author: Sukanta Manna  
-Purpose: Show realtime earthquake data.
+Purpose: Show realtime earthquake data with custom marker & popup support.
 **********************************************************************/
 import React, { useEffect, useState } from 'react';
 import { MapContainer, TileLayer, GeoJSON, useMap } from 'react-leaflet';
@@ -24,7 +24,8 @@ interface RealTimeHazardMapProps {
     overlayUrl?: string; // Optional fault line/overlay dataset
     overlayStyle?: L.PathOptions;
     refreshIntervalMs?: number;
-    getMarkerOptions: (feature: any) => L.CircleMarkerOptions;
+    getMarkerOptions?: (feature: any) => L.CircleMarkerOptions;
+    pointToLayer?: (feature: HazardFeature, latlng: LatLng) => L.Layer;
     renderPopupContent: (feature: any) => React.ReactNode;
 }
 
@@ -66,6 +67,7 @@ export default function RealTimeHazardMap({
     overlayStyle = { color: "#f59e0b", weight: 1.5, opacity: 0.7 },
     refreshIntervalMs = 120000,
     getMarkerOptions,
+    pointToLayer: customPointToLayer,
     renderPopupContent
 }: RealTimeHazardMapProps) {
     const [hazardData, setHazardData] = useState<HazardGeoJson | null>(null);
@@ -120,21 +122,23 @@ export default function RealTimeHazardMap({
         return () => clearInterval(interval);
     }, [apiUrl, refreshIntervalMs]);
 
-    const pointToLayer = (feature: HazardFeature, latlng: LatLng) => {
+    // Fallback default layer mapping if custom pointToLayer isn't passed
+    const defaultPointToLayer = (feature: HazardFeature, latlng: LatLng) => {
         try {
-            const options = getMarkerOptions(feature);
+            const options = getMarkerOptions ? getMarkerOptions(feature) : { radius: 6, fillColor: "#dc2626" };
             return L.circleMarker(latlng, options);
         } catch (e) {
             return L.circleMarker(latlng, { radius: 5, fillColor: "#3388ff" });
         }
     };
 
+
     const onEachFeature = (feature: any, layer: L.Layer) => {
         try {
             const popupNode = renderPopupContent(feature);
             if (popupNode) {
                 const popupHtml = ReactDOMServer.renderToString(
-                    <div className="p-1 font-sans text-slate-800 min-w-45">
+                    <div>
                         {popupNode}
                     </div>
                 );
@@ -191,11 +195,12 @@ export default function RealTimeHazardMap({
                 {/* Earthquake Data Layer */}
                 {hasData && (
                     <GeoJSON
-                        key={`${hazardData.features.length}-${apiUrl}`}
+                        // Force re-mount whenever customPointToLayer or feature count changes
+                        key={`hazard-layer-${hazardData.features.length}-${customPointToLayer ? 'custom' : 'default'}-${apiUrl}`}
                         data={hazardData}
-                        pointToLayer={pointToLayer}
+                        pointToLayer={customPointToLayer || defaultPointToLayer}
                         onEachFeature={onEachFeature}
-                        style={(feature: any) => getMarkerOptions(feature)}
+                        style={(feature: any) => (getMarkerOptions ? getMarkerOptions(feature) : {})}
                     />
                 )}
 

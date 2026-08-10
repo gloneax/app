@@ -68,7 +68,7 @@ export default function ChildMortalityMap() {
           const mapYear = record.year || "N/A";
           
           // 🌟 COMPRESSED string value (Zero spaces between metric figures and unit text)
-          const displayVal = record.mortalityRate ? `${record.mortalityRate.toFixed(1)}/1kBirths` : "N/A";
+          const displayVal = record.mortalityRate ? `${record.mortalityRate.toFixed(1)}/1k Births` : "N/A";
 
           const styles = getMarkerProperties(record.mortalityRate || 0);
 
