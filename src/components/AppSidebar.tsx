@@ -16,7 +16,6 @@ import {
     Ribbon,
     Stethoscope,
     HeartHandshake,
-    MessageCircle,
     Scale,
     Copyright
 } from "lucide-react";
@@ -50,6 +49,20 @@ import { ui } from "../i18n/ui";
 interface AppSidebarProps {
     currentLang: keyof typeof ui;
     currentPath: string;
+}
+
+// Telegram SVG Icon Component
+function TelegramIcon({ className }: { className?: string }) {
+    return (
+        <svg
+            className={className}
+            viewBox="0 0 24 24"
+            fill="currentColor"
+            xmlns="http://www.w3.org/2000/svg"
+        >
+            <path d="M12 0C5.37 0 0 5.37 0 12s5.37 12 12 12 12-5.37 12-12S18.63 0 12 0zm5.56 7.641l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.446 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12l-6.87 4.326-2.962-.924c-.643-.204-.657-.643.136-.953l11.57-4.461c.536-.194 1.006.128.831.941z" />
+        </svg>
+    );
 }
 
 function AppSidebar({ currentLang, currentPath }: AppSidebarProps) {
@@ -260,11 +273,11 @@ function AppSidebar({ currentLang, currentPath }: AppSidebarProps) {
                                     </SidebarMenuButton>
                                 </SidebarMenuItem>
 
-                                {/* WhatsApp Group Link */}
+                                {/* Telegram Group Link */}
                                 <SidebarMenuItem>
                                     <SidebarMenuButton asChild>
-                                        <a href="https://chat.whatsapp.com/" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 overflow-hidden">
-                                            <MessageCircle className="h-4 w-4 shrink-0 text-emerald-500" />
+                                        <a href="https://t.me/+ysf-AxpCp5lhMmI1" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 overflow-hidden">
+                                            <TelegramIcon className="h-4 w-4 shrink-0 text-sky-500" />
                                             <span className="truncate">{t("community")}</span>
                                         </a>
                                     </SidebarMenuButton>

@@ -36,7 +36,7 @@ export const ui = {
     'sidebar.categories.tuberculosis': 'Tuberculosis',
     'subtitle': 'HAZARD INTELLIGENCE',
     'donate': 'Donate',
-    'community': 'WhatsApp Community',
+    'community': 'Telegram Community',
     'license': 'License'
   },
   bn: {
@@ -58,7 +58,7 @@ export const ui = {
     'sidebar.categories.tuberculosis': 'যক্ষ্মা',
     'subtitle': 'ঝুঁকি বিষয়ক তথ্য-বিশ্লেষণ',
     'donate': 'দান করুন',
-    'community': 'হোয়াটসঅ্যাপ কমিউনিটি',
+    'community': 'টেলিগ্রাম কমিউনিটি',
     'license': 'লাইসেন্স'
   },
   es: {
@@ -79,7 +79,7 @@ export const ui = {
     'sidebar.categories.tuberculosis': 'Tuberculosis',
     'subtitle': 'INTELIGENCIA DE RIESGOS',
     'donate': 'Donar',
-    'community': 'Comunidad de WhatsApp',
+    'community': 'Comunidad de Telegram',
     'license': 'Licencia'
   },
   fr: {
@@ -100,7 +100,7 @@ export const ui = {
     'sidebar.categories.tuberculosis': 'Tuberculose',
     'subtitle': 'INTELLIGENCE DES RISQUES',
     'donate': 'Faire un don',
-    'community': 'Communauté WhatsApp',
+    'community': 'Communauté Telegram',
     'license': 'Licence'
   },
   hi: {
@@ -122,7 +122,7 @@ export const ui = {
     'sidebar.categories.tuberculosis': 'यक्ष्मा',
     'subtitle': 'खतरे की जानकारी',
     'donate': 'दान करें',
-    'community': 'WhatsApp कम्युनिटी',
+    'community': 'टेलीग्राम कम्युनिटी',
     'license': 'लाइसेंस'
   },
   ja: {
@@ -144,7 +144,7 @@ export const ui = {
     'sidebar.categories.tuberculosis': '結核',
     'subtitle': 'ハザード・インテリジェンス',
     'donate': '寄付する',
-    'community': 'WhatsApp コミュニティ',
+    'community': 'Telegramコミュニティ',
     'license': 'ライセンス'
   },
   ru: {
@@ -166,7 +166,7 @@ export const ui = {
     'sidebar.categories.tuberculosis': 'Туберкулез',
     'subtitle': 'Анализ информации об опасностях',
     'donate': 'Пожертвовать',
-    'community': 'Сообщества WhatsApp',
+    'community': 'Сообщество в Telegram',
     'license': 'Лицензия'
   },
   zh: {
@@ -188,7 +188,7 @@ export const ui = {
     'sidebar.categories.tuberculosis': '结核',
     'subtitle': '危害情报',
     'donate': '捐',
-    'community': 'WhatsApp 社区',
+    'community': 'Telegram 社区',
     'license': '执照'
   }
 } as const;
