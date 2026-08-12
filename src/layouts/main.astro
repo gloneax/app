@@ -8,6 +8,13 @@ import DashboardLayout from "@/components/DashboardLayout"
 import { getLangFromUrl } from "../i18n/utils"
 
 const lang = getLangFromUrl(Astro.url)
+
+declare global {
+  interface Window {
+    dataLayer: Record<string, any>[]
+    gtag?: (...args: any[]) => void
+  }
+}
 ---
 
 <html lang={lang}>
@@ -29,8 +36,21 @@ const lang = getLangFromUrl(Astro.url)
     <link rel="manifest" href="/site.webmanifest" />
     <meta name="theme-color" content="#020617" />
     <title>gloneax</title>
+    <!-- Google Tag (gtag.js) -->
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-Z8TRN6N4XV"
+      is:inline></script>
+    <script is:inline>
+      window.dataLayer = window.dataLayer || []
+      function gtag() {
+        dataLayer.push(arguments)
+      }
+      gtag("js", new Date())
 
-    <!-- inside layouts/main.astro head -->
+      gtag("config", "G-Z8TRN6N4XV")
+    </script>
+
     <script is:inline>
       function applyTheme() {
         const theme = localStorage.getItem("theme")
