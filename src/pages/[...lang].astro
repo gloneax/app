@@ -1,45 +1,107 @@
 ---
 /********************************************************************* 
 Author: Sukanta Manna  
-Purpose: This is home page to the App. Here, we display statistics of 
-         last few years across supported languages.
+Purpose: Landing page displaying application overview, global 
+         telemetry statistics and interactive services 
+         marquee ticker,
 **********************************************************************/
-import Layout from "@/layouts/main.astro";
-import EarthquakeStatsChart from "../components/EarthquakeStatsChart";
-import VolcanoStatsSummary from '../components/VolcanoStatsSummary';
-import StormInsightsCard from '../components/StormInsightsCard';
+import Layout from "@/layouts/main.astro"
+import EarthquakeStatsChart from "../components/EarthquakeStatsChart"
+import VolcanoStatsSummary from "../components/VolcanoStatsSummary"
+import StormInsightsCard from "../components/StormInsightsCard"
+import ServicesMarquee from "../components/ServicesMarquee"
+import { ui } from "../i18n/ui"
 
 export function getStaticPaths() {
   return [
     { params: { lang: undefined } }, // Matches "/"
-    { params: { lang: 'bn' } },      // Matches "/bn"
-    { params: { lang: 'es' } },      // Matches "/es"
-    { params: { lang: 'fr' } },      // Matches "/fr"
-    { params: { lang: 'hi' } },      // Matches "/hi"
-    { params: { lang: 'ja' } },      // Matches "/ja"
-    { params: { lang: 'ru' } },      // Matches "/ru"
-    { params: { lang: 'zh' } },      // Matches "/zh"
-  ];
+    { params: { lang: "bn" } }, // Matches "/bn"
+    { params: { lang: "es" } }, // Matches "/es"
+    { params: { lang: "fr" } }, // Matches "/fr"
+    { params: { lang: "hi" } }, // Matches "/hi"
+    { params: { lang: "ja" } }, // Matches "/ja"
+    { params: { lang: "ru" } }, // Matches "/ru"
+    { params: { lang: "zh" } }, // Matches "/zh"
+  ]
 }
 
-const { lang = 'en' } = Astro.params;
+const { lang = "en" } = Astro.params
+const currentLang = (lang || "en") as keyof typeof ui
+const localizeUrl = (url: string) =>
+  currentLang === "en" ? url : `/${currentLang}${url}`
 ---
 
 <Layout>
-  <div class="w-full h-full min-h-screen overflow-y-auto p-4 sm:p-6 flex flex-col gap-6">
-    {/* Figure 1: 10-Year Earthquake Chart */}
-    <div class="w-full shrink-0">
-      <EarthquakeStatsChart client:only="react" />
-    </div>
+  <div class="flex h-full min-h-screen w-full flex-col overflow-y-auto">
+    {/* HERO SECTION */}
+    <section
+      class="w-full border-b border-slate-200 bg-gradient-to-b from-slate-50 to-white px-4 py-12 sm:px-6 md:py-16 dark:border-slate-800 dark:from-slate-950 dark:to-slate-900"
+    >
+      <div class="mx-auto max-w-4xl space-y-6 text-center">
+        {/* Status Badge */}
+        <div
+          class="inline-flex items-center gap-2 rounded-full border border-rose-500/20 bg-rose-500/10 px-3 py-1 text-xs font-semibold tracking-wide text-rose-600 uppercase dark:text-rose-400"
+        >
+          <span class="h-2 w-2 animate-pulse rounded-full bg-rose-500"></span>
+          Live Global Disaster & Health Telemetry
+        </div>
 
-    {/* Figure 2: Volcanic Activity Summary directly below */}
-    <div class="w-full shrink-0 pb-12">
-      <VolcanoStatsSummary client:only="react" />
-    </div>
+        {/* Hero Title */}
+        <h1
+          class="text-3xl leading-tight font-extrabold tracking-tight text-slate-900 sm:text-5xl dark:text-slate-100"
+        >
+          Real-Time Insights on Global Hazards & Health Metrics
+        </h1>
 
-    {/* Figure 3: Storm Insights */}
-    <div class="w-full shrink-0 pb-12">
-      <StormInsightsCard client:only="react" />
-    </div>
+        {/* Subtitle / Description */}
+        <p
+          class="mx-auto max-w-2xl text-base leading-relaxed text-slate-600 sm:text-lg dark:text-slate-400"
+        >
+          Monitor seismic activity, volcanic events, atmospheric severe weather,
+          and global health trends backed by live USGS, Smithsonian, and WHO
+          data streams.
+        </p>
+
+        {/* Call To Action Buttons */}
+        <div class="flex flex-wrap items-center justify-center gap-4 pt-2">
+          <a
+            href={localizeUrl("/earthquakes")}
+            class="rounded-xl bg-blue-600 px-6 py-3 text-sm font-medium text-white shadow-md shadow-blue-500/20 transition-all hover:bg-blue-700"
+          >
+            Explore Interactive Maps
+          </a>
+          <a
+            href="https://t.me/+ysf-AxpCp5lhMmI1"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="rounded-xl border border-slate-300 px-6 py-3 text-sm font-medium text-slate-700 transition-all hover:bg-slate-100 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800"
+          >
+            Join Telegram Community
+          </a>
+        </div>
+      </div>
+    </section>
+
+    {/* DATA CHARTS / DASHBOARD SECTION */}
+    <div class="mx-auto my-4 flex w-full max-w-6xl flex-col gap-8 p-4 sm:p-6">
+      {/* Figure 1: 10-Year Earthquake Chart */}
+      <div class="w-full shrink-0">
+        <EarthquakeStatsChart client:visible />
+      </div>
+
+      {/* Figure 2: Volcanic Activity Summary */}
+      <div class="w-full shrink-0">
+        <VolcanoStatsSummary client:visible />
+      </div>
+
+      {/* Figure 3: Storm Insights */}
+      <div class="w-full shrink-0">
+        <StormInsightsCard client:visible />
+      </div>
+
+      {/* SERVICES TICKER (Right to Left Scrolling) */}
+      <ServicesMarquee client:load currentLang={currentLang} />
   </div>
+</div>
+  
 </Layout>

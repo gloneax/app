@@ -100,23 +100,23 @@ function AppSidebar({ currentLang, currentPath }: AppSidebarProps) {
     };
 
     const naturalDisasters = [
-        { title: t("sidebar.categories.earthquakes"), url: localizeUrl("/earthquakes"), icon: Activity },
-        { title: t("sidebar.categories.volcaniceruptions"), url: localizeUrl("/volcaniceruptions"), icon: Volcano },
-        { title: t("sidebar.categories.storms"), url: localizeUrl("/storms"), icon: Tornado },
-        { title: t("sidebar.categories.tsunamis"), url: localizeUrl("/tsunamis"), icon: Tsunami },
-        { title: t("sidebar.categories.floods"), url: localizeUrl("/floods"), icon: Flood },
-        { title: t("sidebar.categories.droughts"), url: localizeUrl("/droughts"), icon: ThermometerSun },
-        { title: t("sidebar.categories.wildfires"), url: localizeUrl("/wildfires"), icon: Flame },
-        { title: t("sidebar.categories.avalanches"), url: localizeUrl("/avalanches"), icon: MountainSnow },
+        { title: t("sidebar.categories.earthquakes"), url: localizeUrl("/earthquakes"), icon: Activity, color: 'text-emerald-500' },
+        { title: t("sidebar.categories.volcaniceruptions"), url: localizeUrl("/volcaniceruptions"), icon: Volcano, color: 'text-amber-500' },
+        { title: t("sidebar.categories.storms"), url: localizeUrl("/storms"), icon: Tornado, color: 'text-sky-500' },
+        { title: t("sidebar.categories.tsunamis"), url: localizeUrl("/tsunamis"), icon: Tsunami, color: 'text-blue-500' },
+        { title: t("sidebar.categories.floods"), url: localizeUrl("/floods"), icon: Flood, color: 'text-indigo-500' },
+        { title: t("sidebar.categories.droughts"), url: localizeUrl("/droughts"), icon: ThermometerSun, color: 'text-orange-500' },
+        { title: t("sidebar.categories.wildfires"), url: localizeUrl("/wildfires"), icon: Flame, color: 'text-rose-500' },
+        { title: t("sidebar.categories.avalanches"), url: localizeUrl("/avalanches"), icon: MountainSnow, color: 'text-cyan-500' },
     ];
 
     const healthItems = [
-        { title: t("sidebar.categories.childmortality"), url: localizeUrl("/childmortality"), icon: Baby },
-        { title: t("sidebar.categories.hepatitis"), url: localizeUrl("/hepatitis"), icon: ShieldAlert },
-        { title: t("sidebar.categories.hiv"), url: localizeUrl("/hiv"), icon: Ribbon },
-        { title: t("sidebar.categories.lifeexpectancy"), url: localizeUrl("/lifeexpectancy"), icon: HeartPulse },
-        { title: t("sidebar.categories.mumps"), url: localizeUrl("/mumps"), icon: Biohazard },
-        { title: t("sidebar.categories.tuberculosis"), url: localizeUrl("/tuberculosis"), icon: Stethoscope },
+        { title: t("sidebar.categories.childmortality"), url: localizeUrl("/childmortality"), icon: Baby, color: 'text-pink-500' },
+        { title: t("sidebar.categories.hepatitis"), url: localizeUrl("/hepatitis"), icon: ShieldAlert, color: 'text-violet-500' },
+        { title: t("sidebar.categories.hiv"), url: localizeUrl("/hiv"), icon: Ribbon, color: 'text-red-500' },
+        { title: t("sidebar.categories.lifeexpectancy"), url: localizeUrl("/lifeexpectancy"), icon: HeartPulse, color: 'text-teal-500' },
+        { title: t("sidebar.categories.mumps"), url: localizeUrl("/mumps"), icon: Biohazard, color: 'text-lime-500' },
+        { title: t("sidebar.categories.tuberculosis"), url: localizeUrl("/tuberculosis"), icon: Stethoscope, color: 'text-purple-500' },
     ];
 
     return (
@@ -168,8 +168,8 @@ function AppSidebar({ currentLang, currentPath }: AppSidebarProps) {
                                                                     : "text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800"
                                                             }`}
                                                         >
-                                                            <item.icon className={`h-4 w-4 shrink-0 ${active ? "text-blue-600 dark:text-blue-400" : "text-slate-400"}`} />
-                                                            <span className="inline-block truncate">{item.title}</span>
+                                                            <item.icon className={`h-4 w-4 ${item.color} shrink-0`} />
+                                                            <span className={`inline-block truncate ${active ? "text-blue-600 dark:text-blue-400" : "text-slate-400"}`}>{item.title}</span>
                                                         </a>
                                                     );
                                                 })}
@@ -190,7 +190,7 @@ function AppSidebar({ currentLang, currentPath }: AppSidebarProps) {
                                                     className={active ? "bg-slate-100 dark:bg-slate-800 text-blue-600 dark:text-blue-400 font-semibold" : ""}
                                                 >
                                                     <a href={item.url} className="flex items-center gap-2 overflow-hidden">
-                                                        <item.icon className="h-4 w-4 shrink-0" />
+                                                        <item.icon className={`h-4 w-4 shrink-0 ${item.color}`} />
                                                         <span className="truncate">{item.title}</span>
                                                     </a>
                                                 </SidebarMenuButton>
@@ -231,8 +231,8 @@ function AppSidebar({ currentLang, currentPath }: AppSidebarProps) {
                                                                     : "text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800"
                                                             }`}
                                                         >
-                                                            <item.icon className={`h-4 w-4 shrink-0 ${active ? "text-blue-600 dark:text-blue-400" : "text-slate-400"}`} />
-                                                            <span className="inline-block truncate">{item.title}</span>
+                                                            <item.icon className={`h-4 w-4 ${item.color} shrink-0`} />
+                                                            <span className={`inline-block truncate ${active ? "text-blue-600 dark:text-blue-400" : "text-slate-400"}`}>{item.title}</span>
                                                         </a>
                                                     );
                                                 })}
@@ -262,7 +262,7 @@ function AppSidebar({ currentLang, currentPath }: AppSidebarProps) {
                                                                 className={active ? "bg-slate-100 dark:bg-slate-800 text-blue-600 dark:text-blue-400 font-semibold" : ""}
                                                             >
                                                                 <a href={item.url} className="flex items-center gap-2 overflow-hidden">
-                                                                    <item.icon className="h-4 w-4 shrink-0" />
+                                                                    <item.icon className={`h-4 w-4 ${item.color} shrink-0`} />
                                                                     <span className="truncate">{item.title}</span>
                                                                 </a>
                                                             </SidebarMenuButton>

@@ -36,24 +36,34 @@ declare global {
     <link rel="manifest" href="/site.webmanifest" />
     <meta name="theme-color" content="#020617" />
     <title>gloneax</title>
-    <!-- Google Tag (gtag.js) -->
-    <script
-      async
-      src="https://www.googletagmanager.com/gtag/js?id=G-Z8TRN6N4XV"
-      is:inline></script>
+    <!-- Defer Adsense & GTM until user interaction -->
     <script is:inline>
-      window.dataLayer = window.dataLayer || []
-      function gtag() {
-        dataLayer.push(arguments)
-      }
-      gtag("js", new Date())
+      function loadThirdPartyScripts() {
+        if (window.thirdPartyScriptsLoaded) return
+        window.thirdPartyScriptsLoaded = true
 
-      gtag("config", "G-Z8TRN6N4XV")
-    </script>
-    <script
-      async
-      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2975791465979776"
-      crossorigin="anonymous" is:inline>
+        // Load Google Tag Manager
+        const gtmScript = document.createElement("script")
+        gtmScript.src =
+          "https://www.googletagmanager.com/gtag/js?id=G-Z8TRN6N4XV"
+        gtmScript.async = true
+        document.head.appendChild(gtmScript)
+
+        // Load AdSense
+        const adsenseScript = document.createElement("script")
+        adsenseScript.src =
+          "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-297XXXXXXXXXXXXX"
+        adsenseScript.async = true
+        adsenseScript.crossOrigin = "anonymous"
+        document.head.appendChild(adsenseScript)
+      }
+
+      // Trigger loading on first interaction or 4s fallback
+      const events = ["mousemove", "scroll", "touchstart", "keydown"]
+      events.forEach((event) =>
+        window.addEventListener(event, loadThirdPartyScripts, { once: true })
+      )
+      setTimeout(loadThirdPartyScripts, 4000)
     </script>
     <script is:inline>
       function applyTheme() {

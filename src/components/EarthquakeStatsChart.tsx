@@ -62,7 +62,7 @@ export default function EarthquakeStatsChart() {
   const maxCount = Math.max(...data.map((d) => d.count), 1);
 
   return (
-    <div className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm font-sans">
+    <div className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 sm:p-6 shadow-sm font-sans">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-6">
         <div>
@@ -83,7 +83,7 @@ export default function EarthquakeStatsChart() {
       </div>
 
       {/* Bar Chart Container */}
-      <div className="h-64 w-full flex items-end gap-2 sm:gap-4 pt-8 pb-2 px-1 border-b border-slate-100 dark:border-slate-800 relative">
+      <div className="h-64 w-full flex items-end gap-1.5 sm:gap-4 pt-8 pb-2 px-1 border-b border-slate-100 dark:border-slate-800 relative">
         {data.map((item, index) => {
           const heightPercent = Math.round((item.count / maxCount) * 100);
           const isHovered = hoveredIndex === index;
@@ -97,7 +97,7 @@ export default function EarthquakeStatsChart() {
             >
               {/* Floating Tooltip */}
               {isHovered && (
-                <div className="absolute -top-10 z-10 bg-slate-900 text-white text-[11px] font-semibold py-1 px-2.5 rounded shadow-lg whitespace-nowrap animate-in fade-in zoom-in-95 duration-150">
+                <div className="absolute -top-10 z-10 bg-slate-900 text-white text-[11px] font-semibold py-1 px-2 rounded shadow-lg whitespace-nowrap animate-in fade-in zoom-in-95 duration-150">
                   {item.year}: <span className="text-rose-400">{item.count.toLocaleString()}</span> quakes
                 </div>
               )}
@@ -105,7 +105,7 @@ export default function EarthquakeStatsChart() {
               {/* Bar SVG/Div */}
               <div
                 style={{ height: `${heightPercent}%` }}
-                className={`w-full rounded-t-md transition-all duration-300 ${
+                className={`w-full rounded-t-sm sm:rounded-t-md transition-all duration-300 ${
                   isHovered
                     ? 'bg-rose-500 shadow-md shadow-rose-500/20'
                     : 'bg-rose-500/80 hover:bg-rose-500 dark:bg-rose-600 dark:hover:bg-rose-500'
@@ -117,10 +117,12 @@ export default function EarthquakeStatsChart() {
       </div>
 
       {/* X-Axis Labels */}
-      <div className="flex justify-between items-center gap-2 sm:gap-4 mt-2 px-1 text-slate-400 text-[11px] font-medium">
+      <div className="flex justify-between items-center gap-1.5 sm:gap-4 mt-3 px-1 text-slate-400 text-[10px] sm:text-[11px] font-medium">
         {data.map((item) => (
-          <div key={item.year} className="flex-1 text-center truncate">
-            {item.year}
+          <div key={item.year} className="flex-1 text-center tracking-tighter sm:tracking-normal">
+            {/* Show '24 on mobile, 2024 on desktop */}
+            <span className="sm:hidden">'{String(item.year).slice(-2)}</span>
+            <span className="hidden sm:inline">{item.year}</span>
           </div>
         ))}
       </div>
