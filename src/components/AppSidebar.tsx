@@ -18,6 +18,7 @@ import {
     HeartHandshake,
     Scale,
     Copyright,
+    ShieldCheck,
     Mail
 } from "lucide-react";
 
@@ -320,17 +321,29 @@ function AppSidebar({ currentLang, currentPath }: AppSidebarProps) {
                                         className={isPathActive(localizeUrl("/license")) ? "bg-slate-100 dark:bg-slate-800 font-semibold text-blue-600 dark:text-blue-400" : ""}
                                     >
                                         <a href={localizeUrl("/license")} className="flex items-center gap-2 overflow-hidden">
-                                            <Scale className="h-4 w-4 shrink-0 text-slate-400" />
+                                            <Scale className="h-4 w-4 shrink-0 text-slate-600 dark:text-slate-400" />
                                             <span className="truncate">{t("license")}</span>
                                         </a>
                                     </SidebarMenuButton>
                                 </SidebarMenuItem>
-
+                                {/* Terms & Privacy */}
+                                <SidebarMenuItem>
+                                    <SidebarMenuButton 
+                                        asChild 
+                                        isActive={isPathActive(localizeUrl("/license"))}
+                                        className={isPathActive(localizeUrl("/license")) ? "bg-slate-100 dark:bg-slate-800 font-semibold text-blue-600 dark:text-blue-400" : ""}
+                                    >
+                                        <a href={localizeUrl("/terms")} className="flex items-center gap-2 overflow-hidden">
+                                            <ShieldCheck className="h-4 w-4 shrink-0 text-blue-700" />
+                                            <span className="truncate">{t("terms")}</span>
+                                        </a>
+                                    </SidebarMenuButton>
+                                </SidebarMenuItem>
                                 {/* Contact Email Link */}
                                 <SidebarMenuItem>
                                     <SidebarMenuButton asChild>
                                         <a href="mailto:contact@gloneax.org" className="flex items-center gap-2 overflow-hidden">
-                                            <Mail className="h-4 w-4 shrink-0 text-slate-400" />
+                                            <Mail className="h-4 w-4 shrink-0 text-violet-700" />
                                             <span className="truncate">contact@gloneax.org</span>
                                         </a>
                                     </SidebarMenuButton>
@@ -346,7 +359,7 @@ function AppSidebar({ currentLang, currentPath }: AppSidebarProps) {
             <SidebarFooter className="border-t border-slate-200 dark:border-slate-800 p-3 group-data-[state=collapsed]:hidden overflow-hidden">
                 <div className="flex items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400 overflow-hidden">
                     <Copyright className="h-3.5 w-3.5 shrink-0" />
-                    <span className="truncate">{new Date().getFullYear()} Gloneax Org. All rights reserved.</span>
+                    <span className="truncate">{new Date().getFullYear()} gloneax.org. All rights reserved.</span>
                 </div>
             </SidebarFooter>
         </Sidebar>
