@@ -55,8 +55,8 @@ Create a topic branch from main using descriptive prefixes:
 #### Step C: Setup & Development
 Install dependencies and launch the dev server:
   ```bash
-  npm install
-  npm run dev
+  pnpm install
+  pnpm run dev
   ```
 
 #### Step D: Commit Changes
@@ -94,10 +94,10 @@ To maintain code consistency across the project:
   Before submitting your PR, verify the static build succeeds without typescript or bundler errors:
   ```bash  
     # Build production bundle  
-    npm run build
+    pnpm run build
     
     # Preview production output
-    npm run preview
+    pnpm run preview
   ```
 ❓ Questions?  
   If you have questions regarding the codebase or contribution process, feel free to open a discussion or ask in the relevant issue thread.  
