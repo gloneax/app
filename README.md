@@ -119,11 +119,11 @@ cd app
 ```
 Install dependencies:
 ```
-npm install
+pnpm install
 ```
 Start local development:
 ```
-npm run dev
+pnpm run dev
 ```
 View app:
 Open http://localhost:4321 in your browser.
