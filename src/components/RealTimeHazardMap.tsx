@@ -142,7 +142,7 @@ export default function RealTimeHazardMap({
     return (
         <div
             id="map"
-            className="w-full h-full min-h-full z-0 [&_.leaflet-container]:!bg-[#abd3df]" 
+            className="w-full h-full min-h-[500px] relative z-0 [&_.leaflet-container]:!bg-[#abd3df]" 
         >
             <MapContainer center={[0, 0]} zoom={2} className="h-full w-full absolute inset-0">
                 <TileLayer

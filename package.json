@@ -1,7 +1,7 @@
 {
   "name": "gloneax.org",
   "type": "module",
-  "version": "2026.0.0",
+  "version": "2026.0.1",
   "private": true,
   "scripts": {
     "dev": "astro dev",
@@ -26,6 +26,7 @@
     "lucide-react": "^1.16.0",
     "motion": "^13.1.0",
     "nodemailer": "^9.0.5",
+    "plotly.js-dist-min": "^4.0.0",
     "radix-ui": "^1.4.3",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
@@ -40,6 +41,7 @@
     "@types/geojson": "^7946.0.16",
     "@types/leaflet": "^1.9.21",
     "@types/nodemailer": "^8.0.1",
+    "@types/plotly.js-dist-min": "^2.3.4",
     "eslint": "^9.39.4",
     "eslint-plugin-react-hooks": "^7.0.1",
     "eslint-plugin-react-refresh": "^0.5.2",

@@ -57,7 +57,7 @@ export default function VolcanoMap() {
   }
 
   return (
-    <div className="h-full w-full relative z-0 [&_.leaflet-container]:!bg-[#abd3df]">
+    <div className="w-full h-full min-h-[500px] relative z-0 [&_.leaflet-container]:!bg-[#abd3df]">
       <MapContainer center={[10, 20]} zoom={2.3} className="h-full w-full absolute inset-0">
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'

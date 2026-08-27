@@ -55,7 +55,7 @@ export default function ServicesMarquee({ currentLang }: ServicesMarqueeProps) {
   const duplicatedServices = [...services, ...services];
 
   return (
-    <section className="w-full py-6 mb-15 border-y border-slate-200 dark:border-slate-800 bg-slate-100/80 dark:bg-slate-900/90 relative overflow-hidden group">
+    <section className="w-full py-6 border-y border-slate-200 dark:border-slate-800 bg-slate-100/80 dark:bg-slate-900/90 relative overflow-hidden group">
       {/* Edge Fade Overlays matched for both light and dark mode */}
       <div className="absolute left-0 top-0 bottom-0 w-16 sm:w-28 z-10 bg-gradient-to-r from-slate-100 dark:from-slate-950 to-transparent pointer-events-none" />
       <div className="absolute right-0 top-0 bottom-0 w-16 sm:w-28 z-10 bg-gradient-to-l from-slate-100 dark:from-slate-950 to-transparent pointer-events-none" />
