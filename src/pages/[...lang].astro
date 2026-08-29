@@ -39,22 +39,7 @@ const localizeUrl = (url: string) =>
     <Hero client:load currentLang={currentLang} />
 
     {/* DATA CHARTS / DASHBOARD SECTION */}
-    <div class="mx-auto my-4 flex w-full max-w-6xl flex-col gap-8 p-4 sm:p-6">
-      {/* Figure 1: 10-Year Earthquake Chart */}
-      <div class="w-full shrink-0">
-        <EarthquakeStatsChart client:visible />
-      </div>
-
-      {/* Figure 2: Volcanic Activity Summary */}
-      <div class="w-full shrink-0">
-        <VolcanoStatsSummary client:visible />
-      </div>
-
-      {/* Figure 3: Storm Insights */}
-      <div class="w-full shrink-0">
-        <StormInsightsCard client:visible />
-      </div>
-
+    <div class="mx-auto my-4 flex w-full max-w-6xl flex-col gap-8 p-4 sm:p-6">      
       {/* SERVICES TICKER (Right to Left Scrolling) */}
       <ServicesMarquee client:load currentLang={currentLang} />
       {/* CONTACT FORM */}

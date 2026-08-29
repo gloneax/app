@@ -126,103 +126,103 @@ export default function EarthquakeMap() {
           return L.marker(latlng, { icon: customIcon });
         }}
         renderPopupContent={(feature) => {
-  const props = feature.properties || {};
-  const coords = feature.geometry?.coordinates || [0, 0, 0];
-  
-  // GeoJSON coordinates are [longitude, latitude, depth]
-  const longitude = coords[0] !== undefined ? coords[0].toFixed(3) : 'N/A';
-  const latitude = coords[1] !== undefined ? coords[1].toFixed(3) : 'N/A';
-  const depth = coords[2] !== undefined ? `${coords[2]} km` : 'N/A';
-  
-  const mag = props.mag ?? 0;
+          const props = feature.properties || {};
+          const coords = feature.geometry?.coordinates || [0, 0, 0];
 
-  // Calculate approximate rupture zone radius in km using empirical scaling
-  const radiusKm = mag > 0 ? Math.pow(10, (0.5 * mag) - 1.8).toFixed(1) : 'N/A';
-  
-  const sourceUrl = props.url || 'https://earthquake.usgs.gov/';
+          // GeoJSON coordinates are [longitude, latitude, depth]
+          const longitude = coords[0] !== undefined ? coords[0].toFixed(3) : 'N/A';
+          const latitude = coords[1] !== undefined ? coords[1].toFixed(3) : 'N/A';
+          const depth = coords[2] !== undefined ? `${coords[2]} km` : 'N/A';
 
-  return (
-    <div className="w-[300px] font-sans bg-white overflow-hidden text-slate-800">
-      {/* Header Badge Section */}
-      <div className="bg-[#0f172a] text-white px-3.5 py-3 flex items-center justify-between border-b border-slate-800">
-        <span className="font-extrabold tracking-wider text-xs uppercase">
-          EPICENTER
-        </span>
-        <a
-          href={sourceUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white px-2 py-0.5 rounded text-[10px] font-bold tracking-wide uppercase transition-colors"
-        >
-          USGS_DATA ↗
-        </a>
-      </div>
+          const mag = props.mag ?? 0;
 
-      {/* Data Table Grid */}
-      <div className="divide-y divide-slate-100 text-xs">
-        {/* MAGNITUDE */}
-        <div className="grid grid-cols-[110px_1fr] items-center px-3.5 py-2">
-          <span className="font-bold text-slate-400 uppercase text-[10px] tracking-wider">
-            MAGNITUDE
-          </span>
-          <span className="font-bold text-slate-900 text-sm">
-            {mag}
-          </span>
-        </div>
+          // Calculate approximate rupture zone radius in km using empirical scaling
+          const radiusKm = mag > 0 ? Math.pow(10, (0.5 * mag) - 1.8).toFixed(1) : 'N/A';
 
-        {/* LOCATION */}
-        <div className="grid grid-cols-[110px_1fr] items-center px-3.5 py-2">
-          <span className="font-bold text-slate-400 uppercase text-[10px] tracking-wider">
-            LOCATION
-          </span>
-          <span className="font-bold text-slate-900 leading-tight">
-            {props.place || 'Unknown'}
-          </span>
-        </div>
+          const sourceUrl = props.url || 'https://earthquake.usgs.gov/';
 
-        {/* GEO-CORDINATE */}
-        <div className="grid grid-cols-[110px_1fr] items-center px-3.5 py-2">
-          <span className="font-bold text-slate-400 uppercase text-[10px] tracking-wider">
-            GEO-CORDINATE
-          </span>
-          <span className="font-semibold text-slate-800">
-            {latitude}°, {longitude}°
-          </span>
-        </div>
+          return (
+            <div className="w-[300px] font-sans bg-white overflow-hidden text-slate-800">
+              {/* Header Badge Section */}
+              <div className="bg-[#0f172a] text-white px-3.5 py-3 flex items-center justify-between border-b border-slate-800">
+                <span className="font-extrabold tracking-wider text-xs uppercase">
+                  EPICENTER
+                </span>
+                <a
+                  href={sourceUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white px-2 py-0.5 rounded text-[10px] font-bold tracking-wide uppercase transition-colors"
+                >
+                  USGS_DATA ↗
+                </a>
+              </div>
 
-        {/* DEPTH */}
-        <div className="grid grid-cols-[110px_1fr] items-center px-3.5 py-2">
-          <span className="font-bold text-slate-400 uppercase text-[10px] tracking-wider">
-            DEPTH
-          </span>
-          <span className="font-semibold text-slate-800">
-            {depth}
-          </span>
-        </div>
+              {/* Data Table Grid */}
+              <div className="divide-y divide-slate-100 text-xs">
+                {/* MAGNITUDE */}
+                <div className="grid grid-cols-[110px_1fr] items-center px-3.5 py-2">
+                  <span className="font-bold text-slate-400 uppercase text-[10px] tracking-wider">
+                    MAGNITUDE
+                  </span>
+                  <span className="font-bold text-slate-900 text-sm">
+                    {mag}
+                  </span>
+                </div>
 
-        {/* DATE */}
-        <div className="grid grid-cols-[110px_1fr] items-center px-3.5 py-2">
-          <span className="font-bold text-slate-400 uppercase text-[10px] tracking-wider">
-            DATE & TIME
-          </span>
-          <span className="font-semibold text-slate-800 leading-tight">
-            {props.time ? new Date(props.time).toLocaleString() : 'N/A'}
-          </span>
-        </div>
+                {/* LOCATION */}
+                <div className="grid grid-cols-[110px_1fr] items-center px-3.5 py-2">
+                  <span className="font-bold text-slate-400 uppercase text-[10px] tracking-wider">
+                    LOCATION
+                  </span>
+                  <span className="font-bold text-slate-900 leading-tight">
+                    {props.place || 'Unknown'}
+                  </span>
+                </div>
 
-        {/* RADIUS IN KM */}
-        <div className="grid grid-cols-[110px_1fr] items-center px-3.5 py-2">
-          <span className="font-bold text-slate-400 uppercase text-[10px] tracking-wider">
-            RADIUS
-          </span>
-          <span className="font-semibold text-slate-800">
-            ~{radiusKm} km
-          </span>
-        </div>
-      </div>
-    </div>
-  );
-}}
+                {/* GEO-CORDINATE */}
+                <div className="grid grid-cols-[110px_1fr] items-center px-3.5 py-2">
+                  <span className="font-bold text-slate-400 uppercase text-[10px] tracking-wider">
+                    GEO-CORDINATE
+                  </span>
+                  <span className="font-semibold text-slate-800">
+                    {latitude}°, {longitude}°
+                  </span>
+                </div>
+
+                {/* DEPTH */}
+                <div className="grid grid-cols-[110px_1fr] items-center px-3.5 py-2">
+                  <span className="font-bold text-slate-400 uppercase text-[10px] tracking-wider">
+                    DEPTH
+                  </span>
+                  <span className="font-semibold text-slate-800">
+                    {depth}
+                  </span>
+                </div>
+
+                {/* DATE */}
+                <div className="grid grid-cols-[110px_1fr] items-center px-3.5 py-2">
+                  <span className="font-bold text-slate-400 uppercase text-[10px] tracking-wider">
+                    DATE & TIME
+                  </span>
+                  <span className="font-semibold text-slate-800 leading-tight">
+                    {props.time ? new Date(props.time).toLocaleString() : 'N/A'}
+                  </span>
+                </div>
+
+                {/* RADIUS IN KM */}
+                <div className="grid grid-cols-[110px_1fr] items-center px-3.5 py-2">
+                  <span className="font-bold text-slate-400 uppercase text-[10px] tracking-wider">
+                    RADIUS
+                  </span>
+                  <span className="font-semibold text-slate-800">
+                    ~{radiusKm} km
+                  </span>
+                </div>
+              </div>
+            </div>
+          );
+        }}
       />
     </>
   );
