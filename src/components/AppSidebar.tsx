@@ -312,20 +312,7 @@ function AppSidebar({ currentLang, currentPath }: AppSidebarProps) {
                                         </a>
                                     </SidebarMenuButton>
                                 </SidebarMenuItem>
-
-                                {/* License Link */}
-                                <SidebarMenuItem>
-                                    <SidebarMenuButton 
-                                        asChild 
-                                        isActive={isPathActive(localizeUrl("/license"))}
-                                        className={isPathActive(localizeUrl("/license")) ? "bg-slate-100 dark:bg-slate-800 font-semibold text-blue-600 dark:text-blue-400" : ""}
-                                    >
-                                        <a href={localizeUrl("/license")} className="flex items-center gap-2 overflow-hidden">
-                                            <Scale className="h-4 w-4 shrink-0 text-slate-600 dark:text-slate-400" />
-                                            <span className="truncate">{t("license")}</span>
-                                        </a>
-                                    </SidebarMenuButton>
-                                </SidebarMenuItem>
+                                
                                 {/* Terms & Privacy */}
                                 <SidebarMenuItem>
                                     <SidebarMenuButton 
